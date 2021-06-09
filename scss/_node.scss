@@ -1,0 +1,76 @@
+$wall-color: rgba(23, 25, 48, 0.9);
+
+.node {
+  width: 100%;
+  padding-bottom: 100%;
+  // border-collapse: collapse;
+  // border-spacing: 0;
+  border-top: $border;
+  border-left: $border;
+  color: $wall-color;
+  // border: solid 1px grey;
+  cursor: pointer;
+  position: relative;
+  div {
+    position: absolute;
+    width: 100%;
+    margin: 0;
+    top: 50%;
+    font-size: 1.5vw;
+    transform: translate(0, -50%);
+    text-align: center;
+    i {
+      display: none;
+      margin: auto;
+    }
+  }
+
+  &-goal {
+    border: none;
+    background-color: rgba(255, 99, 71, 0.75);
+    cursor: move;
+    i.igoal {
+      display: block;
+    }
+  }
+
+  &-start {
+    border: none;
+    background-color: rgba(46, 204, 113, 0.75);
+    cursor: move;
+    i.istart {
+      display: block;
+    }
+  }
+
+  &-wall {
+    border: none;
+    background-color: rgba(23, 25, 48, 0.9);
+  }
+
+  &-visited {
+    // border: none;
+    background-color: rgba(0, 190, 218, 0.75);
+  }
+
+  &-path {
+    border: none;
+    background-color: rgb(255, 254, 106);
+  }
+
+  &-weight {
+    div i {
+      font-size: 1.2vw;
+    }
+    i.iweight {
+      display: block;
+    }
+  }
+  &.exemple {
+    cursor: default;
+    width: 25px;
+    height: 25px;
+    padding-bottom: 0;
+    border: $border;
+  }
+}
