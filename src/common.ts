@@ -1,9 +1,10 @@
+/* eslint-disable no-param-reassign */
 import NodeClass from "./NodeClass";
 
 export const ROW_NUMBER = 23; // 23
 export const COL_NUMBER = 51; // 51
-export const AnimDelay = 5;
 export const defaultWeight = 10;
+export const mazeHolePresence = 5;
 
 export interface Coord {
   x:number;
@@ -23,6 +24,20 @@ export const defaultGoal:Coord = {
 type baseState = "start" | "goal";
 export type stateToChange = baseState | "setWeight" | "removeWeight" | "setWall" | "removeWall" | "none";
 export type NodeState = baseState | "path" | "visited" | "empty" | "wall";
+
+export const AlgosChoices = ["Astar", "Djikstra"] as const;
+export type AlgosLabels = typeof AlgosChoices[number];
+export const defaultAlgo:AlgosLabels = "Astar";
+export const SpeedChoices = ["Slow", "Medium", "Fast AF", "Instant"] as const;
+export type speedLabels = typeof SpeedChoices[number];
+
+export const AnimDelay:Record<speedLabels, number> = {
+  Slow: 30,
+  Medium: 10,
+  "Fast AF": 5,
+  Instant: 0,
+};
+export const defaultSpeed:speedLabels = "Fast AF";
 
 export interface NodeInfo {
   pos:Coord;
@@ -79,13 +94,18 @@ export function ArrayFromVertexSet(vertexSet:Set<Coord>, start:Coord, goal:Coord
   return Array.from(vertexSet).filter(filterStartGoal(start, goal));
 }
 
-export type TodoFunc = (pos:Coord) => void;
-
 export function createNodeGrid(row:number, col:number) {
-  // eslint-disable-next-line max-len
-  return Array(row).fill(null).map((_, x) => Array(col).fill(null).map((__, y) => new NodeClass({ x, y })));
+  return Array(row)
+    .fill(null)
+    .map((_, x) => Array(col)
+      .fill(null)
+      .map((__, y) => new NodeClass({ x, y })));
 }
 
 export function clearBoard(nodes:NodeClass[][]) {
   nodes.forEach((row) => row.forEach((n) => n.clear()));
+}
+
+export function removeWallsAndWeights(nodes:NodeClass[][]) {
+  nodes.forEach((row) => row.forEach((n) => n.reset()));
 }
