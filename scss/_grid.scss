@@ -1,11 +1,14 @@
-$border: solid 1px rgb(175, 216, 248);
+$border-color: rgb(175, 216, 248);
+@function border($color) {
+  @return solid 1px $color;
+}
 
 #grid {
-  border-bottom: $border;
-  border-right: $border;
+  border-bottom: border($border-color);
+  border-right: border($border-color);
   display: grid;
   grid-template-columns: repeat(51, 1fr);
-  width: 85%;
+  width: 80%;
   margin: auto;
 }
 

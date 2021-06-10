@@ -1,14 +1,15 @@
 $wall-color: rgba(23, 25, 48, 0.9);
+$goal-color: rgba(255, 99, 71, 0.75);
+$start-color: rgba(46, 204, 113, 0.75);
+$visted-color: rgba(0, 190, 218, 0.75);
+$path-color: rgb(255, 254, 106);
 
 .node {
   width: 100%;
   padding-bottom: 100%;
-  // border-collapse: collapse;
-  // border-spacing: 0;
-  border-top: $border;
-  border-left: $border;
+  border-top: border($border-color);
+  border-left: border($border-color);
   color: $wall-color;
-  // border: solid 1px grey;
   cursor: pointer;
   position: relative;
   div {
@@ -16,7 +17,7 @@ $wall-color: rgba(23, 25, 48, 0.9);
     width: 100%;
     margin: 0;
     top: 50%;
-    font-size: 1.5vw;
+    font-size: 1.4vw;
     transform: translate(0, -50%);
     text-align: center;
     i {
@@ -26,8 +27,9 @@ $wall-color: rgba(23, 25, 48, 0.9);
   }
 
   &-goal {
-    border: none;
-    background-color: rgba(255, 99, 71, 0.75);
+    border-top: border($goal-color);
+    border-left: border($goal-color);
+    background-color: $goal-color;
     cursor: move;
     i.igoal {
       display: block;
@@ -35,8 +37,9 @@ $wall-color: rgba(23, 25, 48, 0.9);
   }
 
   &-start {
-    border: none;
-    background-color: rgba(46, 204, 113, 0.75);
+    border-top: border($start-color);
+    border-left: border($start-color);
+    background-color: $start-color;
     cursor: move;
     i.istart {
       display: block;
@@ -44,18 +47,19 @@ $wall-color: rgba(23, 25, 48, 0.9);
   }
 
   &-wall {
-    border: none;
-    background-color: rgba(23, 25, 48, 0.9);
+    border-top: border($wall-color);
+    border-left: border($wall-color);
+    background-color: $wall-color;
   }
 
   &-visited {
-    // border: none;
-    background-color: rgba(0, 190, 218, 0.75);
+    background-color: $visted-color;
   }
 
   &-path {
-    border: none;
-    background-color: rgb(255, 254, 106);
+    border-top: border($path-color);
+    border-left: border($path-color);
+    background-color: $path-color;
   }
 
   &-weight {
@@ -71,6 +75,6 @@ $wall-color: rgba(23, 25, 48, 0.9);
     width: 25px;
     height: 25px;
     padding-bottom: 0;
-    border: $border;
+    border: border($border-color);
   }
 }
