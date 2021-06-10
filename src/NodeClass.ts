@@ -63,4 +63,13 @@ export default class NodeClass {
       this.state = "empty";
     }
   }
+
+  reset() {
+    if (this._state === "wall") {
+      this.state = "empty";
+    }
+    if (this._weight) {
+      this.weight = undefined;
+    }
+  }
 }
