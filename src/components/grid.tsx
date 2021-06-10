@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import React from "react";
+import { coordToString } from "../common";
 import NodeClass from "../NodeClass";
 import Node from "./node";
 
@@ -16,10 +17,9 @@ export default function Grid({
 }:GridProps) {
   return (
     <div id="grid" className="noselect" onContextMenu={(e) => e.preventDefault()}>
-      {nodeGrid.map((row, x) => row.map((node, y) => (
+      {nodeGrid.map((row) => row.map((node) => (
         <Node
-          // eslint-disable-next-line react/no-array-index-key
-          key={`${x}-${y}`}
+          key={coordToString(node.pos)}
           node={node}
           handleMouseDown={handleMouseDown}
           handleMouseEnter={handleMouseEnter}
