@@ -12,6 +12,12 @@ $path-color: rgb(255, 254, 106);
   color: $wall-color;
   cursor: pointer;
   position: relative;
+  &-bottom {
+    border-bottom: border($border-color);
+  }
+  &-right {
+    border-right: border($border-color);
+  }
   div {
     position: absolute;
     width: 100%;
@@ -31,6 +37,12 @@ $path-color: rgb(255, 254, 106);
     border-left: border($goal-color);
     background-color: $goal-color;
     cursor: move;
+    &-bottom {
+      border-bottom: border($goal-color);
+    }
+    &-right {
+      border-right: border($goal-color);
+    }
     i.igoal {
       display: block;
     }
@@ -41,6 +53,12 @@ $path-color: rgb(255, 254, 106);
     border-left: border($start-color);
     background-color: $start-color;
     cursor: move;
+    &-bottom {
+      border-bottom: border($start-color);
+    }
+    &-right {
+      border-right: border($start-color);
+    }
     i.istart {
       display: block;
     }
@@ -50,6 +68,12 @@ $path-color: rgb(255, 254, 106);
     border-top: border($wall-color);
     border-left: border($wall-color);
     background-color: $wall-color;
+    &-bottom {
+      border-bottom: border($wall-color);
+    }
+    &-right {
+      border-right: border($wall-color);
+    }
   }
 
   &-visited {
@@ -60,6 +84,12 @@ $path-color: rgb(255, 254, 106);
     border-top: border($path-color);
     border-left: border($path-color);
     background-color: $path-color;
+    &-bottom {
+      border-bottom: border($path-color);
+    }
+    &-right {
+      border-right: border($path-color);
+    }
   }
 
   &-weight {
