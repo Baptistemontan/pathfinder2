@@ -83,6 +83,7 @@ export default class BoardClass {
   }
 
   launch(animation:boolean) {
+    console.time(this._currentAlgo);
     const renderID = this.clear();
     const nodesInfos = this.board.map((row) => row.map((n) => n.nodeInfo));
     const [path, toAnimate] = (() => {
@@ -106,6 +107,7 @@ export default class BoardClass {
       animation,
       len,
     );
+    console.timeEnd(this._currentAlgo);
   }
 
   handleMouseEnter(node:NodeClass) {
@@ -184,6 +186,7 @@ export default class BoardClass {
   }
 
   generateMaze() {
+    console.time("maze generation");
     const renderID = this.reset();
     this.board.forEach((row) => {
       row.forEach((node) => {
@@ -201,6 +204,7 @@ export default class BoardClass {
       (node:NodeClass) => { if (node.state === "wall") node.state = "empty"; },
       renderID,
     );
+    console.timeEnd("maze generation");
   }
 
   private animateNodes(
