@@ -13,12 +13,12 @@ export interface Coord {
 
 export const defaultStart:Coord = {
   x: Math.floor(ROW_NUMBER / 2),
-  y: Math.floor(COL_NUMBER / 4),
+  y: Math.floor(COL_NUMBER / 4) - 1,
 };
 
 export const defaultGoal:Coord = {
   x: Math.floor(ROW_NUMBER / 2),
-  y: Math.floor((COL_NUMBER / 4) * 3),
+  y: Math.floor((COL_NUMBER / 4) * 3) + 1,
 };
 
 type baseState = "start" | "goal";
@@ -30,6 +30,9 @@ export type AlgosLabels = typeof AlgosChoices[number];
 export const defaultAlgo:AlgosLabels = "Astar";
 export const SpeedChoices = ["Slow", "Medium", "Fast AF", "Instant"] as const;
 export type speedLabels = typeof SpeedChoices[number];
+export const autoRefreshChoices = ["YES", "NO"] as const;
+export type autoRefreshLabels = typeof autoRefreshChoices[number];
+export const defaultAutoRefresh:autoRefreshLabels = "YES";
 
 export const AnimDelay:Record<speedLabels, number> = {
   Slow: 30,

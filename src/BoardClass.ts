@@ -7,6 +7,7 @@ import {
   Coord,
   createNodeGrid,
   defaultAlgo,
+  defaultAutoRefresh,
   defaultSpeed,
   defaultWeight,
   ManhattanDist,
@@ -47,7 +48,7 @@ export default class BoardClass {
     this.rightClick = false;
     this.mouseDown = false;
     this.toChange = "none";
-    this._autoRefresh = false;
+    this._autoRefresh = defaultAutoRefresh === "YES";
     this._currentAlgo = defaultAlgo;
     this._speed = defaultSpeed;
     this.currentRenderID = Math.random();

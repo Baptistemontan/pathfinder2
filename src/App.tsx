@@ -8,8 +8,11 @@ import "./css/main.css";
 import {
   AlgosChoices,
   AlgosLabels,
+  autoRefreshChoices,
+  autoRefreshLabels,
   COL_NUMBER,
   defaultAlgo,
+  defaultAutoRefresh,
   defaultGoal,
   defaultSpeed,
   defaultStart,
@@ -76,11 +79,11 @@ export default function App() {
             Clear Walls & Weights
           </div>
 
-          <DropDownList
+          <DropDownList<autoRefreshLabels>
             handleChange={(newChoice) => { Board.autoRefresh = newChoice === "YES"; }}
-            choices={["YES", "NO"]}
+            choices={autoRefreshChoices}
             id="refresh-list"
-            defaultChoice="NO"
+            defaultChoice={defaultAutoRefresh}
             question="Auto Refresh :"
           />
           <DropDownList
