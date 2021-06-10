@@ -1,15 +1,21 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import {
+  AlgosLabels,
   AnimDelay,
   clearBoard,
   Coord,
   createNodeGrid,
+  defaultAlgo,
+  defaultSpeed,
   defaultWeight,
   ManhattanDist,
+  removeWallsAndWeights,
+  speedLabels,
   stateToChange,
 } from "./common";
 import NodeClass from "./NodeClass";
-import { Astar } from "./pathfindingAlgo";
+import { Astar, generateMaze } from "./pathfindingAlgo";
 
 export default class BoardClass {
   protected board:NodeClass[][];
@@ -24,7 +30,13 @@ export default class BoardClass {
 
   protected toChange:stateToChange;
 
-  protected currentRenderID: number | undefined;
+  protected currentRenderID: number;
+
+  protected _autoRefresh:boolean;
+
+  protected _currentAlgo:AlgosLabels;
+
+  protected _speed:speedLabels;
 
   constructor(nbRow:number, nbCol:number, defaultStart:Coord, defaultGoal:Coord) {
     this.board = createNodeGrid(nbRow, nbCol);
@@ -35,6 +47,22 @@ export default class BoardClass {
     this.rightClick = false;
     this.mouseDown = false;
     this.toChange = "none";
+    this._autoRefresh = false;
+    this._currentAlgo = defaultAlgo;
+    this._speed = defaultSpeed;
+    this.currentRenderID = Math.random();
+  }
+
+  set speed(speed:speedLabels) {
+    this._speed = speed;
+  }
+
+  set currentAlgo(newCurrentAlgo:AlgosLabels) {
+    this._currentAlgo = newCurrentAlgo;
+  }
+
+  set autoRefresh(autoRefresh:boolean) {
+    this._autoRefresh = autoRefresh;
   }
 
   get grid() {
@@ -47,38 +75,36 @@ export default class BoardClass {
     return this.currentRenderID;
   }
 
-  private updateVisitedNodes(pos:Coord) {
-    this.board[pos.x][pos.y].state = "visited";
+  reset() {
+    const newId = this.clear();
+    removeWallsAndWeights(this.board);
+    return newId;
   }
-
-  private updatePathNodes = (pos:Coord) => {
-    this.board[pos.x][pos.y].state = "path";
-  };
 
   launch(animation:boolean) {
     const renderID = this.clear();
     const nodesInfos = this.board.map((row) => row.map((n) => n.nodeInfo));
-    console.time("Astar");
-    const [path, toAnimate] = Astar(nodesInfos, this.start, this.goal, ManhattanDist);
-    console.timeEnd("Astar");
+    const [path, toAnimate] = (() => {
+      if (this._currentAlgo === "Astar") {
+        return Astar(nodesInfos, this.start, this.goal, ManhattanDist);
+      }
+      return Astar(nodesInfos, this.start, this.goal);
+    })();
     if (path.length === 0) console.log("no Path");
     const len = toAnimate.length;
-    toAnimate.forEach((pos, i) => {
-      if (animation) {
-        // eslint-disable-next-line max-len
-        setTimeout(() => renderID === this.currentRenderID && this.updateVisitedNodes(pos), i * AnimDelay);
-      } else {
-        this.updateVisitedNodes(pos);
-      }
-    });
-    path.forEach((pos, i) => {
-      if (animation) {
-        // eslint-disable-next-line max-len
-        setTimeout(() => renderID === this.currentRenderID && this.updatePathNodes(pos), (len + i) * AnimDelay);
-      } else {
-        this.updatePathNodes(pos);
-      }
-    });
+    this.animateNodes(
+      toAnimate,
+      (node:NodeClass) => { node.state = "visited"; },
+      renderID,
+      animation,
+    );
+    this.animateNodes(
+      path,
+      (node:NodeClass) => { node.state = "path"; },
+      renderID,
+      animation,
+      len,
+    );
   }
 
   handleMouseEnter(node:NodeClass) {
@@ -119,8 +145,8 @@ export default class BoardClass {
   }
 
   handleMouseUp() {
+    if (this._autoRefresh && this.mouseDown) this.launch(false);
     this.mouseDown = false;
-    this.launch(false);
   }
 
   handleMouseDown = (node:NodeClass, button:number) => {
@@ -154,5 +180,40 @@ export default class BoardClass {
     }
     this.mouseDown = true;
     this.handleMouseEnter(node);
+  }
+
+  generateMaze() {
+    const renderID = this.reset();
+    this.board.forEach((row) => {
+      row.forEach((node) => {
+        if (node.state === "empty") node.state = "wall";
+      });
+    });
+    const startingPoint:Coord = {
+      x: this.start.x + ((this.start.x + 1) % 2),
+      y: this.start.y + ((this.start.y + 1) % 2),
+    };
+    const nodesInfos = this.board.map((row) => row.map((n) => n.nodeInfo));
+    const toAnimate = generateMaze(this.board, nodesInfos, startingPoint);
+    this.animateNodes(
+      toAnimate,
+      (node:NodeClass) => { if (node.state === "wall") node.state = "empty"; },
+      renderID,
+    );
+  }
+
+  private animateNodes(
+    toAnimate:Coord[],
+    changeState: (node:NodeClass) => void,
+    renderID:number,
+    animate = true,
+    offset = 0,
+  ) {
+    const toDo = animate && AnimDelay[this._speed] !== 0
+      ? (pos:Coord, i:number) => setTimeout(
+        () => { if (renderID === this.currentRenderID) changeState(this.board[pos.x][pos.y]); },
+        (offset + i) * AnimDelay[this._speed],
+      ) : (pos:Coord) => { changeState(this.board[pos.x][pos.y]); };
+    toAnimate.forEach(toDo);
   }
 }
